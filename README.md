@@ -1,1 +1,1 @@
-# multi-sys-cli
+# multi-sys-cli (msc)

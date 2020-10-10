@@ -61,6 +61,10 @@ def pool_shell(provs, name):
     _exec_shell(pool)
 
 
+def _insert_string_vars(system, pool, cmd):
+    return cmd.replace("{{pool_idx}}", str(system.get_id())).replace("{{pool_size}}", str(pool.size))
+
+
 def _exec_cmd(pool, cmd):
     def ssh_and_exec(system, client, cmd):
         client.connect(system.get_ip(), username=system.get_default_user(), auth_timeout=10)
@@ -72,7 +76,7 @@ def _exec_cmd(pool, cmd):
     threads = []
     for system in pool.systems:
         client = system.get_paramiko_ssh_client()
-        actual_cmd = cmd.replace("{{pool_idx}}", str(system.get_id())).replace("{{pool_size}}", str(pool.size))
+        actual_cmd = _insert_string_vars(system, pool, cmd)
         thread = threading.Thread(target=ssh_and_exec, args=(system, client, actual_cmd))
         thread.start()
         threads.append(thread)
@@ -98,7 +102,7 @@ def _exec_shell(pool):
         writer.start()
 
         while run_bp[i]:
-            chan.send(q.get().replace("{{pool_idx}}", str(system.get_id())).replace("{{pool_size}}", str(pool.size)))
+            chan.send(_insert_string_vars(system, pool, q.get()))
             q.task_done()
 
         writer.join()
@@ -122,7 +126,7 @@ def _exec_shell(pool):
                 break
             for q in queues:
                 q.put(user_input)
-    except Exception:
+    except KeyboardInterrupt:
         for i, thread in enumerate(threads):
             run_bp[i] = False
             thread.join()
