@@ -15,6 +15,8 @@ For Digital Ocean, set the environment variable: `DIGITALOCEAN_ACCESS_TOKEN=6afa
 
 ### Create a Pool
 
+Use your cloud provider's API to spin up several machines.
+
 ```
 $ msc pool create
 ? What provider do you want to use?  digitalocean
@@ -41,7 +43,7 @@ $ msc pool exec --name webscraping --cmd "ls /"
 
 ### Interactive Multi-Shell
 
-Execute the given command on all the machine in the `webscraping` pool.
+Start an interative shell that duplicates i/o across machines in the `webscraping` pool.
 
 ```
 $ msc pool shell
