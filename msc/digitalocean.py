@@ -9,7 +9,6 @@ class DigitalOceanSystem(System):
         self.droplet = droplet
         self.id = int(self.droplet.name.split("-")[-1])
         self.ip = self.droplet.ip_address
-        self.pool = None
 
     def get_ip(self):
         return self.ip
@@ -46,10 +45,7 @@ class DigitalOceanPoolProvider(PoolProvider):
             pools[pool_id].append(DigitalOceanSystem(droplet))
         do_pools = []
         for pool_id, systems in pools.items():
-            pool = Pool(pool_id, systems)
-            for sys in systems:
-                sys.pool = pool
-            do_pools.append(pool)
+            do_pools.append(Pool(pool_id, systems))
         return do_pools
 
     def get_create_options(self):

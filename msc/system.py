@@ -14,13 +14,11 @@ class System:
     def get_pool(self):
         raise NotImplementedError()
 
-    def exec_cmd(self, cmd):
-        pool = self.get_pool()
+    def get_default_user(self):
+        return "root"
+
+    def get_paramiko_ssh_client(self):
         client = paramiko.SSHClient()
         client.load_system_host_keys()
         client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        client.connect(self.get_ip(), username="root", auth_timeout=10)
-        stdin, stdout, stderr = client.exec_command(cmd)
-        for line in stdout:
-            print(f"[{pool.name}-{self.get_id()}]  " + line.strip("\n"))
-        client.close()
+        return client
