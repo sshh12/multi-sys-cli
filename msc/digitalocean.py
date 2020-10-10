@@ -13,9 +13,6 @@ class DigitalOceanSystem(System):
     def get_ip(self):
         return self.ip
 
-    def get_pool(self):
-        return self.pool
-
     def get_id(self):
         return self.id
 
